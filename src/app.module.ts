@@ -4,9 +4,11 @@ import { AppController } from './app.controller';
 import { RequestLogInterceptor } from './interceptors/request-log.interceptor';
 import { AppService } from './app.service';
 import { NestLoggerModule } from './logger';
+import { ConfigModule } from '@nestjs/config';
+import { ConfigurationSchema } from './configuration';
 
 @Module({
-    imports: [NestLoggerModule],
+    imports: [NestLoggerModule, ConfigModule.forRoot({ isGlobal: true, validationSchema: ConfigurationSchema, validationOptions: { abortEarly: true } })],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
 })
