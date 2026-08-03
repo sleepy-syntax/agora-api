@@ -1,16 +1,13 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
+import { RequestLogInterceptor } from './interceptors/request-log.interceptor';
 import { AppService } from './app.service';
 import { NestLoggerModule } from './logger';
-import { ReqLogMiddleware } from './middlewares/req-log.middleware';
 
 @Module({
     imports: [NestLoggerModule],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
 })
-export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(ReqLogMiddleware).forRoutes('/', '*path');
-    }
-}
+export class AppModule {}
