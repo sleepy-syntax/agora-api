@@ -1,0 +1,4 @@
+pnpm format
+pnpm lint
+pnpm generate:example-env
+git add example.env
