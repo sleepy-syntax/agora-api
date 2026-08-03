@@ -1,29 +1,26 @@
 import { LoggerModule } from 'nestjs-pino';
-import { randomUUID } from 'crypto';
-import { REQUEST_ID_HEADER } from './constants/variables';
 import { RequestMethod } from '@nestjs/common';
+import { SENSITIVE_LOG_PATHS } from './constants/variables';
+
+const isProduction = process.env.NODE_ENV === 'production';
+const level = process.env.LOG_LEVEL ?? (isProduction ? 'info' : 'debug');
 
 export const NestLoggerModule = LoggerModule.forRoot({
-    forRoutes: [
-        { path: '/', method: RequestMethod.ALL },
-        { path: '*path', method: RequestMethod.ALL },
-    ],
+    forRoutes: [{ path: '*path', method: RequestMethod.ALL }],
 
     pinoHttp: {
         name: 'nestjs-app',
 
-        level: 'debug',
+        level,
         quietReqLogger: true,
+        redact: { paths: SENSITIVE_LOG_PATHS, censor: '[REDACTED]' },
 
-        genReqId: (req, res) => {
-            const id = req.id || req.headers[REQUEST_ID_HEADER];
-            if (id) return id;
-
-            const newId = randomUUID();
-            res.setHeader(REQUEST_ID_HEADER, newId);
-            return newId;
+        customLogLevel: (_request, response, error) => {
+            if (error || response.statusCode >= 500) return 'error';
+            if (response.statusCode >= 400) return 'warn';
+            return 'info';
         },
 
-        transport: { level: 'debug', target: 'pino-pretty', options: { singleLine: true, colorize: true, translateTime: 'SYS:standard' } },
+        transport: isProduction ? undefined : { target: 'pino-pretty', options: { singleLine: true, colorize: true, translateTime: 'SYS:standard' } },
     },
 });
