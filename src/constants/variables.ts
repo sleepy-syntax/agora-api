@@ -13,3 +13,10 @@ export const SENSITIVE_LOG_PATHS = [
     'request.query.accessToken',
     'request.query.apiKey',
 ];
+
+export const ENVS = {
+    SWAGGER: 'SWAGGER',
+    GLOBAL_PREFIX: 'GLOBAL_PREFIX',
+    NODE_ENV: 'NODE_ENV',
+    PORT: 'PORT',
+} as const;
