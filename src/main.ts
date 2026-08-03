@@ -6,9 +6,10 @@ import { Logger } from 'nestjs-pino';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { randomUUID } from 'node:crypto';
 import { REQUEST_ID_HEADER } from './constants/variables';
+import { setupSwagger } from './swagger';
 
 const GLOBAL_PREFIX = process.env.GLOBAL_PREFIX ?? 'api/v1';
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT ?? '3000';
 
 async function bootstrap() {
     const adapter = new FastifyAdapter({ requestIdHeader: REQUEST_ID_HEADER, genReqId: () => randomUUID() });
@@ -23,6 +24,8 @@ async function bootstrap() {
     app.useLogger(app.get(Logger));
     app.setGlobalPrefix(GLOBAL_PREFIX);
     app.enableCors();
+
+    setupSwagger(app, GLOBAL_PREFIX, PORT);
 
     await app.listen(PORT);
     app.get(Logger).log(`🚀 Server is running on http://localhost:${PORT}/${GLOBAL_PREFIX}`);
