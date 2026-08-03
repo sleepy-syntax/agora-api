@@ -12,6 +12,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, { bufferLogs: true, autoFlushLogs: true, logger: ['debug'] });
     app.useLogger(app.get(Logger));
     app.setGlobalPrefix(GLOBAL_PREFIX);
+    app.enableCors();
     await app.listen(PORT);
     app.get(Logger).log(`🚀 Server is running on http://localhost:${PORT}/${GLOBAL_PREFIX}`);
 }
