@@ -1,3 +1,15 @@
-export const REQUEST_NAMESPACE_NAME = 'REQUEST_NAMESPACE';
-export const REQUEST_NAMESPACE_REQUEST_ID_KEY = 'REQUEST_ID';
 export const REQUEST_ID_HEADER = 'X-Request-Id';
+export const SENSITIVE_LOG_PATHS = [
+    'req.headers.authorization',
+    'req.headers.cookie',
+    'request.body.password',
+    'request.body.passwordConfirmation',
+    'request.body.token',
+    'request.body.accessToken',
+    'request.body.refreshToken',
+    'request.body.secret',
+    'request.body.apiKey',
+    'request.query.token',
+    'request.query.accessToken',
+    'request.query.apiKey',
+];
