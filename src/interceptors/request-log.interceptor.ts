@@ -2,19 +2,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { IncomingHttpHeaders } from 'node:http';
 import { PinoLogger } from 'nestjs-pino';
 import { Observable } from 'rxjs';
-
-interface IRequestLogSource {
-    ip: string;
-    method: string;
-    url: string;
-    hostname: string;
-    protocol: string;
-    body: unknown;
-    query: unknown;
-    params: unknown;
-    headers: IncomingHttpHeaders;
-    routeOptions?: { url?: string };
-}
+import type { FastifyRequest } from 'fastify';
 
 function getPath(url: string): string {
     const queryStart = url.indexOf('?');
@@ -41,7 +29,7 @@ export class RequestLogInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
         if (context.getType() !== 'http' || !this.logger.logger.isLevelEnabled('debug')) return next.handle();
 
-        const request = context.switchToHttp().getRequest<IRequestLogSource>();
+        const request = context.switchToHttp().getRequest<FastifyRequest>();
         const originalUrl = request.url;
 
         const logRequest = {
