@@ -26,6 +26,7 @@ async function bootstrap() {
     app.setGlobalPrefix(GLOBAL_PREFIX);
     app.enableCors();
     app.useGlobalFilters(new GlobalExceptionFilter());
+    app.enableShutdownHooks();
 
     setupSwagger(app, GLOBAL_PREFIX, PORT);
 
