@@ -5,11 +5,11 @@ import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { randomUUID } from 'node:crypto';
-import { REQUEST_ID_HEADER } from './constants/variables';
+import { ENVS, REQUEST_ID_HEADER } from './constants/variables';
 import { setupSwagger } from './swagger';
 
-const GLOBAL_PREFIX = process.env.GLOBAL_PREFIX ?? 'api/v1';
-const PORT = process.env.PORT ?? '3000';
+const GLOBAL_PREFIX = process.env[ENVS.GLOBAL_PREFIX] ?? 'api/v1';
+const PORT = process.env[ENVS.PORT] ?? '3000';
 
 async function bootstrap() {
     const adapter = new FastifyAdapter({ requestIdHeader: REQUEST_ID_HEADER, genReqId: () => randomUUID() });
