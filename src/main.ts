@@ -12,6 +12,7 @@ import fastifyHelmet from '@fastify/helmet';
 
 const GLOBAL_PREFIX = process.env[ENVS.GLOBAL_PREFIX] ?? 'api/v1';
 const PORT = process.env[ENVS.PORT] ?? '3000';
+const CLIENT_URL = process.env[ENVS.CLIENT_URL] ?? 'http://localhost:3000';
 
 async function bootstrap() {
     const adapter = new FastifyAdapter({ requestIdHeader: REQUEST_ID_HEADER, genReqId: () => randomUUID() });
@@ -26,7 +27,7 @@ async function bootstrap() {
     app.useLogger(app.get(Logger));
     app.setGlobalPrefix(GLOBAL_PREFIX);
     await app.register(fastifyHelmet);
-    app.enableCors();
+    app.enableCors({ origin: CLIENT_URL, credentials: true });
     app.useGlobalFilters(new GlobalExceptionFilter());
     app.enableShutdownHooks();
 
