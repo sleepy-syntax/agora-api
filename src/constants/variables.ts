@@ -20,4 +20,5 @@ export const ENVS = {
     GLOBAL_PREFIX: 'GLOBAL_PREFIX',
     SWAGGER: 'SWAGGER',
     LOG_LEVEL: 'LOG_LEVEL',
+    CLIENT_URL: 'CLIENT_URL',
 } as const;
