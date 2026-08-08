@@ -1,9 +1,9 @@
 import { LoggerModule } from 'nestjs-pino';
 import { RequestMethod } from '@nestjs/common';
-import { SENSITIVE_LOG_PATHS } from './constants/variables';
+import { ENVS, SENSITIVE_LOG_PATHS } from './constants/variables';
 
-const isProduction = process.env.NODE_ENV === 'production';
-const level = process.env.LOG_LEVEL ?? (isProduction ? 'info' : 'debug');
+const isProduction = process.env[ENVS.NODE_ENV] === 'production';
+const level = process.env[ENVS.LOG_LEVEL] ?? (isProduction ? 'info' : 'debug');
 
 export const NestLoggerModule = LoggerModule.forRoot({
     forRoutes: [{ path: '*path', method: RequestMethod.ALL }],
