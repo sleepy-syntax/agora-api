@@ -22,6 +22,7 @@
         "generate:example-env": "npx ts-node scripts/generate-example-env.ts"
     },
     "dependencies": {
+        "@fastify/helmet": "^13.1.0",
         "@fastify/static": "^10.1.2",
         "@nestjs/common": "^11.0.1",
         "@nestjs/config": "^4.0.4",
