@@ -8,6 +8,7 @@ import { randomUUID } from 'node:crypto';
 import { ENVS, REQUEST_ID_HEADER } from './constants/variables';
 import { setupSwagger } from './swagger';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import fastifyHelmet from '@fastify/helmet';
 
 const GLOBAL_PREFIX = process.env[ENVS.GLOBAL_PREFIX] ?? 'api/v1';
 const PORT = process.env[ENVS.PORT] ?? '3000';
@@ -24,6 +25,7 @@ async function bootstrap() {
 
     app.useLogger(app.get(Logger));
     app.setGlobalPrefix(GLOBAL_PREFIX);
+    await app.register(fastifyHelmet);
     app.enableCors();
     app.useGlobalFilters(new GlobalExceptionFilter());
     app.enableShutdownHooks();
