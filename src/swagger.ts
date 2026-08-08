@@ -1,9 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
+import { ENVS } from './constants/variables';
 
 export function setupSwagger(app: INestApplication, globalPrefix: string, port: string) {
-    if (process.env.SWAGGER !== 'true') return;
+    if (process.env[ENVS.SWAGGER] !== 'true') return;
 
     const config = new DocumentBuilder().setTitle('API').setDescription('API description').setVersion('1.0').addBearerAuth().build();
 
