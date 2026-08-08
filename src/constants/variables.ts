@@ -15,8 +15,9 @@ export const SENSITIVE_LOG_PATHS = [
 ];
 
 export const ENVS = {
-    SWAGGER: 'SWAGGER',
-    GLOBAL_PREFIX: 'GLOBAL_PREFIX',
     NODE_ENV: 'NODE_ENV',
     PORT: 'PORT',
+    GLOBAL_PREFIX: 'GLOBAL_PREFIX',
+    SWAGGER: 'SWAGGER',
+    LOG_LEVEL: 'LOG_LEVEL',
 } as const;
