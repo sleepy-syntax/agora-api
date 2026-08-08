@@ -7,6 +7,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { randomUUID } from 'node:crypto';
 import { ENVS, REQUEST_ID_HEADER } from './constants/variables';
 import { setupSwagger } from './swagger';
+import { GlobalExceptionFilter } from './filters/global-exception.filter';
 
 const GLOBAL_PREFIX = process.env[ENVS.GLOBAL_PREFIX] ?? 'api/v1';
 const PORT = process.env[ENVS.PORT] ?? '3000';
@@ -24,6 +25,7 @@ async function bootstrap() {
     app.useLogger(app.get(Logger));
     app.setGlobalPrefix(GLOBAL_PREFIX);
     app.enableCors();
+    app.useGlobalFilters(new GlobalExceptionFilter());
 
     setupSwagger(app, GLOBAL_PREFIX, PORT);
 
