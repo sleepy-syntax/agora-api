@@ -1,0 +1,13 @@
+services:
+    nest-template:
+        container_name: nest-template
+        image: nest-template:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        stop_grace_period: 15s
+        env_file:
+            - .env
+        ports:
+            - '${PORT}:${PORT}'
