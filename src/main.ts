@@ -33,7 +33,7 @@ async function bootstrap() {
 
     setupSwagger(app, GLOBAL_PREFIX, PORT);
 
-    await app.listen(PORT);
+    await app.listen(PORT, '0.0.0.0');
     app.get(Logger).log(`🚀 Server is running on http://localhost:${PORT}/${GLOBAL_PREFIX}`);
 }
 
