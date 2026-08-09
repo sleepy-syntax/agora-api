@@ -1,0 +1,71 @@
+# Dependencies & build output
+node_modules
+dist
+build
+coverage
+.nyc_output
+
+# Git & VCS
+.git
+.gitignore
+.gitattributes
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+example.env
+**/secrets.dev.yaml
+**/values.dev.yaml
+
+# Logs & runtime
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Tests
+test
+**/*.spec.ts
+**/*.e2e-spec.ts
+jest.config.*
+
+# Tooling / IDE
+.husky
+.vscode
+.idea
+.project
+.classpath
+.c9
+*.launch
+.settings
+*.sublime-workspace
+.temp
+.tmp
+.DS_Store
+.cache
+.next
+.vs
+.toolstarget
+
+# Docs (not needed to build/run)
+README.md
+README.Docker.md
+documentation
+docs
+*.md
+LICENSE
+
+# Docker (keep out of build context)
+Dockerfile*
+docker-compose*.yml
+compose.y*ml
+.dockerignore
+**/charts
