@@ -25,6 +25,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     pnpm install --frozen-lockfile --ignore-scripts
 
 COPY . .
+
 RUN pnpm run build
 
 FROM node:${NODE_VERSION}-alpine AS final
