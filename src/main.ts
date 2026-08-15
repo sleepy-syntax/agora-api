@@ -9,6 +9,7 @@ import { ENVS, REQUEST_ID_HEADER } from './constants/variables';
 import { setupSwagger } from './swagger';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import fastifyHelmet from '@fastify/helmet';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 const GLOBAL_PREFIX = process.env[ENVS.GLOBAL_PREFIX] ?? 'api/v1';
 const PORT = process.env[ENVS.PORT] ?? '3000';
@@ -30,6 +31,8 @@ async function bootstrap() {
     app.enableCors({ origin: CLIENT_URL, credentials: true });
     app.useGlobalFilters(new GlobalExceptionFilter());
     app.enableShutdownHooks();
+
+    app.useGlobalPipes(new ZodValidationPipe());
 
     setupSwagger(app, GLOBAL_PREFIX, PORT);
 
