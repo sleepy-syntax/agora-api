@@ -22,9 +22,6 @@ importers:
             '@nestjs/core':
                 specifier: ^11.0.1
                 version: 11.1.28(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/platform-express@11.1.28)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-            '@nestjs/platform-express':
-                specifier: ^11.0.1
-                version: 11.1.28(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.1.28)(supports-color@8.1.1)
             '@nestjs/platform-fastify':
                 specifier: ^11.1.28
                 version: 11.1.28(@fastify/static@10.1.2)(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.1.28)
@@ -71,9 +68,6 @@ importers:
             '@nestjs/testing':
                 specifier: ^11.0.1
                 version: 11.1.28(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.1.28)(@nestjs/platform-express@11.1.28)
-            '@types/express':
-                specifier: ^5.0.0
-                version: 5.0.6
             '@types/jest':
                 specifier: ^30.0.0
                 version: 30.0.0
@@ -931,12 +925,6 @@ packages:
     '@types/babel__traverse@7.28.0':
         resolution: { integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q== }
 
-    '@types/body-parser@1.19.6':
-        resolution: { integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g== }
-
-    '@types/connect@3.4.38':
-        resolution: { integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug== }
-
     '@types/cookiejar@2.1.5':
         resolution: { integrity: sha512-he+DHOWReW0nghN24E1WUqM0efK4kI9oTqDm6XmK8ZPe2djZ90BSNdGnIyCLzCPw7/pogPlGbzI2wHGGmi4O/Q== }
 
@@ -948,15 +936,6 @@ packages:
 
     '@types/estree@1.0.9':
         resolution: { integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg== }
-
-    '@types/express-serve-static-core@5.1.3':
-        resolution: { integrity: sha512-dPfW8NFiOF4wOHc7+N/QSxlY9cfSsenewGbAz8C8U/MULPd/YZ27LvJUIlzaXie7e6Ove9YunJGgC9tbHD2cKw== }
-
-    '@types/express@5.0.6':
-        resolution: { integrity: sha512-sKYVuV7Sv9fbPIt/442koC7+IIwK5olP1KWeD88e/idgoJqDm3JV/YUiPwkoKK92ylff2MGxSz1CSjsXelx0YA== }
-
-    '@types/http-errors@2.0.5':
-        resolution: { integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg== }
 
     '@types/istanbul-lib-coverage@2.0.6':
         resolution: { integrity: sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w== }
@@ -978,18 +957,6 @@ packages:
 
     '@types/node@24.13.3':
         resolution: { integrity: sha512-Dh8vAsV36ig5wa9OX4pXvMc9D3Veibfw2wix0CUwYODLD8nkj9UsLjASr49nPg+2eKzxhBV+v7L8pXvT4e639Q== }
-
-    '@types/qs@6.15.1':
-        resolution: { integrity: sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw== }
-
-    '@types/range-parser@1.2.7':
-        resolution: { integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ== }
-
-    '@types/send@1.2.1':
-        resolution: { integrity: sha512-arsCikDvlU99zl1g69TcAB3mzZPpxgw0UQnaHeC1Nwb015xp8bknZv5rIfri9xTOcMuaVgvabfIRA7PSZVuZIQ== }
-
-    '@types/serve-static@2.2.0':
-        resolution: { integrity: sha512-8mam4H1NHLtu7nmtalF7eyBH14QyOASmcxHhSfEoRyr0nP/YdoesEtU+uSRvMe96TW/HPTtkoKqQLl53N7UXMQ== }
 
     '@types/stack-utils@2.0.3':
         resolution: { integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw== }
@@ -4253,6 +4220,7 @@ snapshots:
             tslib: 2.8.1
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     '@nestjs/platform-fastify@11.1.28(@fastify/static@10.1.2)(@nestjs/common@11.1.28(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.1.28)':
         dependencies:
@@ -4376,15 +4344,6 @@ snapshots:
         dependencies:
             '@babel/types': 7.29.8
 
-    '@types/body-parser@1.19.6':
-        dependencies:
-            '@types/connect': 3.4.38
-            '@types/node': 24.13.3
-
-    '@types/connect@3.4.38':
-        dependencies:
-            '@types/node': 24.13.3
-
     '@types/cookiejar@2.1.5': {}
 
     '@types/eslint-scope@3.7.7':
@@ -4398,21 +4357,6 @@ snapshots:
             '@types/json-schema': 7.0.15
 
     '@types/estree@1.0.9': {}
-
-    '@types/express-serve-static-core@5.1.3':
-        dependencies:
-            '@types/node': 24.13.3
-            '@types/qs': 6.15.1
-            '@types/range-parser': 1.2.7
-            '@types/send': 1.2.1
-
-    '@types/express@5.0.6':
-        dependencies:
-            '@types/body-parser': 1.19.6
-            '@types/express-serve-static-core': 5.1.3
-            '@types/serve-static': 2.2.0
-
-    '@types/http-errors@2.0.5': {}
 
     '@types/istanbul-lib-coverage@2.0.6': {}
 
@@ -4436,19 +4380,6 @@ snapshots:
     '@types/node@24.13.3':
         dependencies:
             undici-types: 7.18.2
-
-    '@types/qs@6.15.1': {}
-
-    '@types/range-parser@1.2.7': {}
-
-    '@types/send@1.2.1':
-        dependencies:
-            '@types/node': 24.13.3
-
-    '@types/serve-static@2.2.0':
-        dependencies:
-            '@types/http-errors': 2.0.5
-            '@types/node': 24.13.3
 
     '@types/stack-utils@2.0.3': {}
 
@@ -4719,6 +4650,7 @@ snapshots:
         dependencies:
             mime-types: 3.0.2
             negotiator: 1.0.0
+        optional: true
 
     acorn-import-phases@1.0.4(acorn@8.18.0):
         dependencies:
@@ -4801,7 +4733,8 @@ snapshots:
             normalize-path: 3.0.0
             picomatch: 2.3.2
 
-    append-field@1.0.0: {}
+    append-field@1.0.0:
+        optional: true
 
     arg@4.1.3: {}
 
@@ -4903,6 +4836,7 @@ snapshots:
             type-is: 2.1.0
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     brace-expansion@1.1.18:
         dependencies:
@@ -4943,8 +4877,10 @@ snapshots:
     busboy@1.6.0:
         dependencies:
             streamsearch: 1.1.0
+        optional: true
 
-    bytes@3.1.2: {}
+    bytes@3.1.2:
+        optional: true
 
     call-bind-apply-helpers@1.0.2:
         dependencies:
@@ -5040,20 +4976,25 @@ snapshots:
             inherits: 2.0.4
             readable-stream: 3.6.2
             typedarray: 0.0.6
+        optional: true
 
-    content-disposition@1.1.0: {}
+    content-disposition@1.1.0:
+        optional: true
 
     content-disposition@2.0.1: {}
 
-    content-type@1.0.5: {}
+    content-type@1.0.5:
+        optional: true
 
-    content-type@2.0.0: {}
+    content-type@2.0.0:
+        optional: true
 
     convert-source-map@2.0.0: {}
 
     cookie-signature@1.2.2: {}
 
-    cookie@0.7.2: {}
+    cookie@0.7.2:
+        optional: true
 
     cookie@1.1.1: {}
 
@@ -5063,6 +5004,7 @@ snapshots:
         dependencies:
             object-assign: 4.1.1
             vary: 1.1.2
+        optional: true
 
     cosmiconfig@8.3.6(typescript@5.9.3):
         dependencies:
@@ -5132,7 +5074,8 @@ snapshots:
 
     eastasianwidth@0.2.0: {}
 
-    ee-first@1.1.1: {}
+    ee-first@1.1.1:
+        optional: true
 
     electron-to-chromium@1.5.399: {}
 
@@ -5142,7 +5085,8 @@ snapshots:
 
     emoji-regex@9.2.2: {}
 
-    encodeurl@2.0.0: {}
+    encodeurl@2.0.0:
+        optional: true
 
     end-of-stream@1.4.5:
         dependencies:
@@ -5273,7 +5217,8 @@ snapshots:
 
     esutils@2.0.3: {}
 
-    etag@1.8.1: {}
+    etag@1.8.1:
+        optional: true
 
     events@3.3.0: {}
 
@@ -5332,6 +5277,7 @@ snapshots:
             vary: 1.1.2
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     fast-copy@4.0.4: {}
 
@@ -5421,6 +5367,7 @@ snapshots:
             statuses: 2.0.2
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     find-my-way@9.6.0:
         dependencies:
@@ -5481,9 +5428,11 @@ snapshots:
             dezalgo: 1.0.4
             once: 1.4.0
 
-    forwarded@0.2.0: {}
+    forwarded@0.2.0:
+        optional: true
 
-    fresh@2.0.0: {}
+    fresh@2.0.0:
+        optional: true
 
     fs-extra@10.1.0:
         dependencies:
@@ -5632,7 +5581,8 @@ snapshots:
 
     inherits@2.0.4: {}
 
-    ipaddr.js@1.9.1: {}
+    ipaddr.js@1.9.1:
+        optional: true
 
     ipaddr.js@2.4.0: {}
 
@@ -5650,7 +5600,8 @@ snapshots:
 
     is-interactive@1.0.0: {}
 
-    is-promise@4.0.0: {}
+    is-promise@4.0.0:
+        optional: true
 
     is-stream@2.0.1: {}
 
@@ -6134,15 +6085,18 @@ snapshots:
 
     math-intrinsics@1.1.0: {}
 
-    media-typer@0.3.0: {}
+    media-typer@0.3.0:
+        optional: true
 
-    media-typer@1.1.1: {}
+    media-typer@1.1.1:
+        optional: true
 
     memfs@3.5.3:
         dependencies:
             fs-monkey: 1.1.0
 
-    merge-descriptors@2.0.0: {}
+    merge-descriptors@2.0.0:
+        optional: true
 
     merge-stream@2.0.0: {}
 
@@ -6159,6 +6113,7 @@ snapshots:
     mime-types@3.0.2:
         dependencies:
             mime-db: 1.54.0
+        optional: true
 
     mime@2.6.0: {}
 
@@ -6190,6 +6145,7 @@ snapshots:
             busboy: 1.6.0
             concat-stream: 2.0.0
             type-is: 1.6.18
+        optional: true
 
     mute-stream@2.0.0: {}
 
@@ -6197,7 +6153,8 @@ snapshots:
 
     natural-compare@1.4.0: {}
 
-    negotiator@1.0.0: {}
+    negotiator@1.0.0:
+        optional: true
 
     neo-async@2.6.2: {}
 
@@ -6233,7 +6190,8 @@ snapshots:
         dependencies:
             path-key: 3.1.1
 
-    object-assign@4.1.1: {}
+    object-assign@4.1.1:
+        optional: true
 
     object-inspect@1.13.4: {}
 
@@ -6242,6 +6200,7 @@ snapshots:
     on-finished@2.4.1:
         dependencies:
             ee-first: 1.1.1
+        optional: true
 
     once@1.4.0:
         dependencies:
@@ -6303,7 +6262,8 @@ snapshots:
             json-parse-even-better-errors: 2.3.1
             lines-and-columns: 1.2.4
 
-    parseurl@1.3.3: {}
+    parseurl@1.3.3:
+        optional: true
 
     path-exists@4.0.0: {}
 
@@ -6407,6 +6367,7 @@ snapshots:
         dependencies:
             forwarded: 0.2.0
             ipaddr.js: 1.9.1
+        optional: true
 
     pump@3.0.4:
         dependencies:
@@ -6424,7 +6385,8 @@ snapshots:
 
     quick-format-unescaped@4.0.4: {}
 
-    range-parser@1.3.0: {}
+    range-parser@1.3.0:
+        optional: true
 
     raw-body@3.0.2:
         dependencies:
@@ -6432,6 +6394,7 @@ snapshots:
             http-errors: 2.0.1
             iconv-lite: 0.7.3
             unpipe: 1.0.0
+        optional: true
 
     react-is@18.3.1: {}
 
@@ -6483,6 +6446,7 @@ snapshots:
             path-to-regexp: 8.4.2
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     rxjs@7.8.1:
         dependencies:
@@ -6536,6 +6500,7 @@ snapshots:
             statuses: 2.0.2
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     serve-static@2.2.1(supports-color@8.1.1):
         dependencies:
@@ -6545,6 +6510,7 @@ snapshots:
             send: 1.2.1(supports-color@8.1.1)
         transitivePeerDependencies:
             - supports-color
+        optional: true
 
     set-cookie-parser@2.7.2: {}
 
@@ -6620,7 +6586,8 @@ snapshots:
 
     statuses@2.0.2: {}
 
-    streamsearch@1.1.0: {}
+    streamsearch@1.1.0:
+        optional: true
 
     string-length@4.0.2:
         dependencies:
@@ -6830,14 +6797,17 @@ snapshots:
         dependencies:
             media-typer: 0.3.0
             mime-types: 2.1.35
+        optional: true
 
     type-is@2.1.0:
         dependencies:
             content-type: 2.0.0
             media-typer: 1.1.1
             mime-types: 3.0.2
+        optional: true
 
-    typedarray@0.0.6: {}
+    typedarray@0.0.6:
+        optional: true
 
     typescript-eslint@8.65.0(eslint@9.39.5(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3):
         dependencies:
@@ -6865,7 +6835,8 @@ snapshots:
 
     universalify@2.0.1: {}
 
-    unpipe@1.0.0: {}
+    unpipe@1.0.0:
+        optional: true
 
     unrs-resolver@1.12.2:
         dependencies:
@@ -6914,7 +6885,8 @@ snapshots:
             '@types/istanbul-lib-coverage': 2.0.6
             convert-source-map: 2.0.0
 
-    vary@1.1.2: {}
+    vary@1.1.2:
+        optional: true
 
     walker@1.0.8:
         dependencies:
