@@ -1,7 +1,7 @@
-ARG NODE_VERSION=24.19.0
+ARG NODE_VERSION=krypton-alpine
 ARG PNPM_VERSION=11.15.1
 
-FROM node:${NODE_VERSION}-alpine AS base
+FROM node:${NODE_VERSION} AS base
 
 WORKDIR /usr/src/app
 
@@ -28,13 +28,12 @@ COPY . .
 
 RUN pnpm run build
 
-FROM node:${NODE_VERSION}-alpine AS final
+FROM node:${NODE_VERSION} AS final
 
 WORKDIR /usr/src/app
 
 ENV NODE_ENV=production
 
-COPY --chown=node:node package.json .
 COPY --chown=node:node --from=deps /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
