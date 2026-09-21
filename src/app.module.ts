@@ -6,9 +6,14 @@ import { AppService } from './app.service';
 import { NestLoggerModule } from './logger';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigurationSchema } from './configuration';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-    imports: [NestLoggerModule, ConfigModule.forRoot({ isGlobal: true, validationSchema: ConfigurationSchema, validationOptions: { abortEarly: true } })],
+    imports: [
+        NestLoggerModule,
+        ConfigModule.forRoot({ isGlobal: true, validationSchema: ConfigurationSchema, validationOptions: { abortEarly: true } }),
+        DatabaseModule,
+    ],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
 })
