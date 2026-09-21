@@ -15,10 +15,15 @@ export const SENSITIVE_LOG_PATHS = [
 ];
 
 export const ENVS = {
+    /* General */
     NODE_ENV: 'NODE_ENV',
     PORT: 'PORT',
     GLOBAL_PREFIX: 'GLOBAL_PREFIX',
     SWAGGER: 'SWAGGER',
     LOG_LEVEL: 'LOG_LEVEL',
     CLIENT_URL: 'CLIENT_URL',
+
+    /* Database */
+    MONGODB_URI: 'MONGODB_URI',
+    MONGODB_DB_NAME: 'MONGODB_DB_NAME',
 } as const;
