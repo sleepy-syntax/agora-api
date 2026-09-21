@@ -1,7 +1,7 @@
 {
-    "name": "nest-template",
+    "name": "agora-api",
     "version": "0.0.1",
-    "description": "",
+    "description": "NestJS backend APIs for the Agora video calling and conferencing platform.",
     "author": "",
     "private": true,
     "license": "UNLICENSED",

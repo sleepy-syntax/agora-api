@@ -1,8 +1,8 @@
-# nest-template
+# Agora API
 
-A NestJS starter for HTTP backends. It ships with Fastify, validated configuration, structured logging, request IDs, Zod validation, a consistent error shape, optional Swagger, and Docker.
+Agora API is the NestJS backend for Agora, a video calling and video conferencing platform. It provides the HTTP API foundation that the client application will use for conferencing workflows such as users, rooms, meetings, call sessions, and related platform services as those modules are added.
 
-Authentication and databases are **not** included. Projects differ on both, so they are left out of this starter.
+The current backend foundation ships with Fastify, validated configuration, structured logging, request IDs, Zod validation, a consistent error shape, optional Swagger, and Docker. Product-specific modules such as authentication, persistence, rooms, participants, and media-provider integration are not implemented yet.
 
 ## Setup
 
@@ -26,7 +26,7 @@ With defaults, the app listens on `http://localhost:3000/api/v1`.
 
 ## Deployment
 
-This repo ships a production process and a Docker image. There is no cloud-specific deploy config.
+This repo ships a production process and a Docker image for the Agora API service. There is no cloud-specific deploy config.
 
 **Process** (Node 24.19.0, a `.env` next to the app):
 
@@ -49,4 +49,4 @@ The image is multi-stage Alpine, runs as `node`, and starts `node dist/src/main`
 
 ## Documentation
 
-See [docs/](docs/README.md) for intent, configuration, request flow, logging, Swagger, and Docker.
+See [docs/](docs/README.md) for product context, backend scope, configuration, request flow, logging, Swagger, and Docker.

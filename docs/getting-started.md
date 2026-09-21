@@ -1,5 +1,7 @@
 # Getting started
 
+This service is the NestJS backend/API for Agora, the video calling and video conferencing platform.
+
 ## Requirements
 
 - Node.js **24.19.0** (`.nvmrc`; the Dockerfile uses the same version)
@@ -19,11 +21,13 @@ Default listen URL (from schema defaults):
 
 `http://localhost:3000/api/v1`
 
-The sample route is `GET /` on the app controller, so with the default prefix that is:
+The current sample route is `GET /` on the app controller, so with the default prefix that is:
 
 `GET http://localhost:3000/api/v1`
 
 Response body: `Hello World!`
+
+Replace this sample route with health and Agora domain routes as the backend grows.
 
 The process binds to `0.0.0.0` so it is reachable from Docker and other hosts, not only localhost.
 

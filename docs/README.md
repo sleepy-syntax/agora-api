@@ -1,10 +1,12 @@
-# Documentation
+# Agora API Documentation
 
-This template is a starting point for a NestJS HTTP API, not a full product stack.
+Agora API is the NestJS backend/API service for Agora, a video calling and video conferencing platform.
 
-**Included:** HTTP server defaults that are easy to run locally and in containers (Fastify, config, logs, validation, errors, optional OpenAPI, Docker).
+This documentation folder is the project knowledge base. Keep it updated whenever a feature, flow, environment variable, deployment behavior, or platform integration changes.
 
-**Not included:** authentication and persistence. Different projects need different auth and databases, so those choices stay out of this starter.
+**Current backend scope:** HTTP server defaults that are easy to run locally and in containers (Fastify, config, logs, validation, errors, optional OpenAPI, Docker).
+
+**Planned product scope:** APIs for conferencing workflows such as authentication, users, rooms, meetings, participants, call sessions, and media-provider integration. These product modules should be documented here as they are implemented.
 
 | Doc                                   | Contents                               |
 | ------------------------------------- | -------------------------------------- |

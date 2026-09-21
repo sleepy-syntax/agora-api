@@ -54,6 +54,7 @@ jest.config.*
 .next
 .vs
 .toolstarget
+.pnpm-store
 
 # Docs (not needed to build/run)
 README.md

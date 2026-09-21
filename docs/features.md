@@ -1,6 +1,8 @@
 # Features
 
-Why these pieces exist: a Nest backend you can clone, run, and extend without inventing the same HTTP/config/logging defaults each time. Auth and databases are omitted because those choices vary by project.
+Agora API is the backend/API service for Agora, a video calling and video conferencing platform. The current codebase establishes the shared NestJS HTTP foundation that future conferencing modules can build on without reimplementing configuration, logging, validation, and deployment defaults.
+
+Product modules such as authentication, users, rooms, meetings, participants, call sessions, and media-provider integration are not implemented yet. Add a dedicated section here for each module as it lands.
 
 ## HTTP adapter (Fastify)
 
@@ -18,7 +20,7 @@ Shutdown hooks are enabled (`app.enableShutdownHooks()`).
 
 `app.enableCors({ origin: CLIENT_URL, credentials: true })`.
 
-That is a **starter default**: one origin from `CLIENT_URL`. Change it for your app (several origins, a function, or CORS off). There is no extra CORS policy in this template.
+That is a baseline default: one origin from `CLIENT_URL`. Change it when Agora needs several web origins, mobile clients, a dynamic allowlist, or a stricter CORS policy.
 
 ## Request ID
 
@@ -31,7 +33,7 @@ An `onRequest` hook copies `request.id` onto the response as `X-Request-Id`.
 
 ## Validation (Zod)
 
-`app.useGlobalPipes(new ZodValidationPipe())` from `nestjs-zod`. DTOs that use Zod (when you add them) are validated globally. This template does not ship request DTOs yet.
+`app.useGlobalPipes(new ZodValidationPipe())` from `nestjs-zod`. DTOs that use Zod (when you add them) are validated globally. Agora-specific request DTOs are not shipped yet.
 
 ## Errors
 
@@ -58,7 +60,7 @@ When enabled (with default prefix `api/v1` and port `3000`):
 - UI: `http://localhost:3000/api/v1/docs`
 - OpenAPI JSON: `http://localhost:3000/api/v1/swagger.json`
 
-The document is titled `API`, version `1.0`, and includes a Bearer auth scheme (`addBearerAuth`) plus `persistAuthorization` in the UI. That is OpenAPI wiring only. **This template does not implement authentication.**
+The document is titled `Agora API`, version `1.0`, and includes a Bearer auth scheme (`addBearerAuth`) plus `persistAuthorization` in the UI. That is OpenAPI wiring only. **Authentication is not implemented yet.**
 
 ## Logging
 
@@ -72,11 +74,15 @@ See [Request flow](request-flow.md) for when logs fire. Summary:
 
 ## Sample API
 
-`AppController` `GET /` → `AppService.getHello()` → `'Hello World!'`. Replace this when you add real modules.
+`AppController` `GET /` → `AppService.getHello()` → `'Hello World!'`. Replace this with a health check or first Agora domain module when the API surface is introduced.
 
-## Out of scope here
+## Product modules
 
-| Concern                      | In this repo                                                                            |
-| ---------------------------- | --------------------------------------------------------------------------------------- |
-| Auth (sessions, JWT, guards) | No — left out because projects do not share one approach. Swagger only declares Bearer. |
-| Database / ORM               | No — left out for the same reason.                                                      |
+| Concern                      | In this repo                                       |
+| ---------------------------- | -------------------------------------------------- |
+| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer. |
+| Database / ORM               | Not implemented yet.                               |
+| Users / profiles             | Not implemented yet.                               |
+| Rooms / meetings             | Not implemented yet.                               |
+| Participants / call sessions | Not implemented yet.                               |
+| Media provider integration   | Not implemented yet.                               |

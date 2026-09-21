@@ -1,5 +1,7 @@
 # Docker
 
+The Docker setup builds and runs the Agora API service.
+
 ## Image
 
 `Dockerfile` is multi-stage:
@@ -13,9 +15,9 @@
 
 ## Compose
 
-`docker-compose.yaml` defines service `nest-template`:
+`docker-compose.yaml` defines service `agora-api`:
 
-- image `nest-template:latest`, build from this Dockerfile
+- image `agora-api:latest`, build from this Dockerfile
 - `restart: unless-stopped`
 - `stop_grace_period: 15s` (fits Nest shutdown hooks)
 - `env_file: .env`
