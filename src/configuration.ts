@@ -16,4 +16,9 @@ export const ConfigurationSchema = Joi.object({
     /* Database */
     [ENVS.MONGODB_URI]: Joi.string().uri().required().description('The URI of the MongoDB database'),
     [ENVS.MONGODB_DB_NAME]: Joi.string().required().description('The name of the MongoDB database'),
+
+    /* Redis */
+    [ENVS.REDIS_HOST]: Joi.string().required().description('The host of the Redis database'),
+    [ENVS.REDIS_PORT]: Joi.number().required().description('The port of the Redis database'),
+    [ENVS.REDIS_PASSWORD]: Joi.string().required().description('The password of the Redis database'),
 });
