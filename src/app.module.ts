@@ -7,12 +7,14 @@ import { NestLoggerModule } from './logger';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigurationSchema } from './configuration';
 import { DatabaseModule } from './database/database.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
     imports: [
         NestLoggerModule,
         ConfigModule.forRoot({ isGlobal: true, validationSchema: ConfigurationSchema, validationOptions: { abortEarly: true } }),
         DatabaseModule,
+        RedisModule,
     ],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
