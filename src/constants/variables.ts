@@ -26,4 +26,9 @@ export const ENVS = {
     /* Database */
     MONGODB_URI: 'MONGODB_URI',
     MONGODB_DB_NAME: 'MONGODB_DB_NAME',
+
+    /* Redis */
+    REDIS_HOST: 'REDIS_HOST',
+    REDIS_PORT: 'REDIS_PORT',
+    REDIS_PASSWORD: 'REDIS_PASSWORD',
 } as const;
