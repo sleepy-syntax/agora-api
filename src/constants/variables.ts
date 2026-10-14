@@ -31,4 +31,22 @@ export const ENVS = {
     REDIS_HOST: 'REDIS_HOST',
     REDIS_PORT: 'REDIS_PORT',
     REDIS_PASSWORD: 'REDIS_PASSWORD',
+
+    /* RTC and matching */
+    STUN_URLS: 'STUN_URLS',
+    TURN_URLS: 'TURN_URLS',
+    TURN_USERNAME: 'TURN_USERNAME',
+    TURN_PASSWORD: 'TURN_PASSWORD',
+    PAIR_BLOCK_TTL_SECONDS: 'PAIR_BLOCK_TTL_SECONDS',
+    PRESENCE_TTL_SECONDS: 'PRESENCE_TTL_SECONDS',
+    CONNECT_TIMEOUT_SECONDS: 'CONNECT_TIMEOUT_SECONDS',
+    STATS_CACHE_TTL_SECONDS: 'STATS_CACHE_TTL_SECONDS',
+} as const;
+
+export const REVIEW_COMMENT_MAX_LENGTH = 1000;
+
+export const RATE_LIMITS = {
+    queueJoinPerClient: { limit: 10, windowSeconds: 60 },
+    queueJoinPerIp: { limit: 30, windowSeconds: 60 },
+    reviewsPerIp: { limit: 10, windowSeconds: 3600 },
 } as const;
