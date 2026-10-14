@@ -17,6 +17,8 @@ pnpm start:dev
 
 `example.env` is generated from the Joi schema in `src/configuration.ts`. Copy it to `.env` and change values for your machine. Do not commit `.env`.
 
+Startup requires Mongo, Redis, and RTC settings the same way: fill `MONGODB_URI`, `MONGODB_DB_NAME`, `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `STUN_URLS`, `TURN_URLS`, `TURN_USERNAME`, and `TURN_PASSWORD` before `pnpm start:dev` will boot.
+
 Default listen URL (from schema defaults):
 
 `http://localhost:3000/api/v1`
