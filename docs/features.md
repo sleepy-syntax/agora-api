@@ -76,13 +76,35 @@ See [Request flow](request-flow.md) for when logs fire. Summary:
 
 `AppController` `GET /` → `AppService.getHello()` → `'Hello World!'`. Replace this with a health check or first Agora domain module when the API surface is introduced.
 
+## Redis coordination
+
+`RedisModule` exports `RedisService`, which owns the single application Redis connection (`ioredis`, lazy connect on module init). Feature code must not open another command client. Socket.IO pub/sub duplicates are added in a later step.
+
+Key names are built only in `src/redis/keys.ts` (`agora:queue`, `agora:presence:{clientId}`, `agora:pair:{smaller}:{larger}`, `agora:session:{sessionId}`, `agora:stats:public`, `agora:lock:sweeper`, `agora:rate:{scope}:{id}`).
+
+`RedisService` methods used by matching, signaling, stats, and rate limits:
+
+| Area          | Methods                                                                                                                    |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Queue         | `joinQueue` (Lua match script), `removeFromQueue`, `queueLength`, `listQueue`                                              |
+| Presence      | `setPresence`, `setPresenceSessionId`, `refreshPresence`, `getPresence`, `deletePresenceIfSocket` (Lua compare-and-delete) |
+| Pair block    | `setPairBlock` (`SET` with `NX`), `hasPairBlock`                                                                           |
+| Session cache | `setSessionHash`, `getSessionHash`, `deleteSessionHash`                                                                    |
+| Rate limit    | `rateLimit` (Lua `INCR` + window `EXPIRE`)                                                                                 |
+| Stats cache   | `cacheStats`, `readStats`                                                                                                  |
+| Sweeper       | `acquireSweeperLock`                                                                                                       |
+| Adapter       | `duplicate()` for a second connection (Socket.IO adapter, step 6)                                                          |
+
+TTLs for presence, pair block, and stats cache come from `ConfigService` (`PRESENCE_TTL_SECONDS`, `PAIR_BLOCK_TTL_SECONDS`, `STATS_CACHE_TTL_SECONDS`). The match script atomically pairs or enqueues; it checks pair blocks with `EXISTS` and never writes them.
+
 ## Product modules
 
-| Concern                      | In this repo                                       |
-| ---------------------------- | -------------------------------------------------- |
-| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer. |
-| Database / ORM               | Not implemented yet.                               |
-| Users / profiles             | Not implemented yet.                               |
-| Rooms / meetings             | Not implemented yet.                               |
-| Participants / call sessions | Not implemented yet.                               |
-| Media provider integration   | Not implemented yet.                               |
+| Concern                      | In this repo                                                                  |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                            |
+| Database / ORM               | Mongo connected (`DatabaseModule`). Session/review collections not added yet. |
+| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache (step 2).  |
+| Users / profiles             | Not implemented yet.                                                          |
+| Rooms / meetings             | Not implemented yet.                                                          |
+| Participants / call sessions | Not implemented yet.                                                          |
+| Media provider integration   | Not implemented yet.                                                          |
