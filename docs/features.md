@@ -89,7 +89,7 @@ Key names are built only in `src/redis/keys.ts` (`agora:queue`, `agora:presence:
 | Queue         | `joinQueue` (Lua match script), `removeFromQueue`, `queueLength`, `listQueue`                                              |
 | Presence      | `setPresence`, `setPresenceSessionId`, `refreshPresence`, `getPresence`, `deletePresenceIfSocket` (Lua compare-and-delete) |
 | Pair block    | `setPairBlock` (`SET` with `NX`), `hasPairBlock`                                                                           |
-| Session cache | `setSessionHash`, `getSessionHash`, `deleteSessionHash`                                                                    |
+| Session cache | `setSessionHash`, `setSessionHashFields`, `getSessionHash`, `deleteSessionHash`                                            |
 | Rate limit    | `rateLimit` (Lua `INCR` + window `EXPIRE`)                                                                                 |
 | Stats cache   | `cacheStats`, `readStats`                                                                                                  |
 | Sweeper       | `acquireSweeperLock`                                                                                                       |
@@ -101,14 +101,32 @@ TTLs for presence, pair block, and stats cache come from `ConfigService` (`PRESE
 
 There is no user collection. The browser supplies a random UUID v4; the server canonicalizes it with `parseUserId` in `src/common/user-id.ts` (trim, lowercase, reject non-v4). That id is the handle for queue entries, presence, session participants, and pair blocks. HTTP routes in this phase do not require or validate `X-User-Id`. Socket handshake validation that calls `parseUserId` on `auth.userId` is added in step 6 (signaling gateway).
 
+## Sessions (Mongo)
+
+`SessionsModule` registers the `sessions` collection and exports `SessionService` as the only writer of `connectedAt` and `endedAt`. There is no `status` field and no camera or mic columns. Phase is derived from timestamps: connecting (`matchedAt` set, `connectedAt` and `endedAt` empty), in progress (`connectedAt` set, `endedAt` empty), over (`endedAt` set).
+
+| Field          | Role                                                                             |
+| -------------- | -------------------------------------------------------------------------------- |
+| `_id`          | UUID string from `randomUUID()` at create; same value as `sessionId` on the wire |
+| `participants` | Two lowercase client ids, sorted lexicographically                               |
+| `offererId`    | Smaller participant id                                                           |
+| `matchedAt`    | Set in `create`                                                                  |
+| `connectedAt`  | First successful WebRTC connection, or null                                      |
+| `endedAt`      | Set in `end`, or null while open                                                 |
+| `endReason`    | `change_partner`, `user_end`, `disconnect`, or `connect_failed`                  |
+| `endedBy`      | Client id of the ender, or null for `connect_failed`                             |
+| `durationMs`   | Set in `end`; `0` when media never connected                                     |
+
+`SessionService.create` inserts the document and writes the Redis session hash. `markConnected` updates Mongo and patches `connectedAt` on the hash. `end` closes the session with a conditional update (concurrent ends race; one winner) and deletes the hash. This service does not write the pair block. `findById`, `findOpen`, and `findConnectTimeouts` support the sweeper and gateway in later steps.
+
 ## Product modules
 
-| Concern                      | In this repo                                                                  |
-| ---------------------------- | ----------------------------------------------------------------------------- |
-| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                            |
-| Database / ORM               | Mongo connected (`DatabaseModule`). Session/review collections not added yet. |
-| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache (step 2).  |
-| Users / profiles             | Not implemented yet.                                                          |
-| Rooms / meetings             | Not implemented yet.                                                          |
-| Participants / call sessions | Not implemented yet.                                                          |
-| Media provider integration   | Not implemented yet.                                                          |
+| Concern                      | In this repo                                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------------------------- |
+| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                                             |
+| Database / ORM               | Mongo connected. `sessions` collection via [Sessions](#sessions-mongo). Reviews not added yet. |
+| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache (step 2).                   |
+| Users / profiles             | Not implemented yet.                                                                           |
+| Rooms / meetings             | Not implemented yet.                                                                           |
+| Participants / call sessions | Session records in Mongo; matching and signaling not wired yet.                                |
+| Media provider integration   | Not implemented yet.                                                                           |
