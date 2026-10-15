@@ -120,6 +120,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         await this.getClient().hset(sessionKey(sessionId), fields);
     }
 
+    async setSessionHashFields(sessionId: string, fields: Partial<ISessionHash>) {
+        if (Object.keys(fields).length === 0) return;
+        await this.getClient().hset(sessionKey(sessionId), fields);
+    }
+
     async getSessionHash(sessionId: string): Promise<ISessionHash | null> {
         const raw = await this.getClient().hgetall(sessionKey(sessionId));
 
