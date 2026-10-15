@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ConfigurationSchema } from './configuration';
 import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
+import { MatchingModule } from './matching/matching.module';
 import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
@@ -17,6 +18,7 @@ import { SessionsModule } from './sessions/sessions.module';
         DatabaseModule,
         RedisModule,
         SessionsModule,
+        MatchingModule,
     ],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
