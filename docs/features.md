@@ -97,6 +97,10 @@ Key names are built only in `src/redis/keys.ts` (`agora:queue`, `agora:presence:
 
 TTLs for presence, pair block, and stats cache come from `ConfigService` (`PRESENCE_TTL_SECONDS`, `PAIR_BLOCK_TTL_SECONDS`, `STATS_CACHE_TTL_SECONDS`). The match script atomically pairs or enqueues; it checks pair blocks with `EXISTS` and never writes them.
 
+## Client id (anonymous identity)
+
+There is no user collection. The browser supplies a random UUID v4; the server canonicalizes it with `parseUserId` in `src/common/user-id.ts` (trim, lowercase, reject non-v4). That id is the handle for queue entries, presence, session participants, and pair blocks. HTTP routes in this phase do not require or validate `X-User-Id`. Socket handshake validation that calls `parseUserId` on `auth.userId` is added in step 6 (signaling gateway).
+
 ## Product modules
 
 | Concern                      | In this repo                                                                  |
