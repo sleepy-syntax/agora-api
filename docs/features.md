@@ -119,6 +119,19 @@ There is no user collection. The browser supplies a random UUID v4; the server c
 
 `SessionService.create` inserts the document and writes the Redis session hash. `markConnected` updates Mongo and patches `connectedAt` on the hash. `end` closes the session with a conditional update (concurrent ends race; one winner) and deletes the hash. This service does not write the pair block. `findById`, `findOpen`, and `findConnectTimeouts` support the sweeper and gateway in later steps.
 
+## Matching (waiting line)
+
+`MatchingModule` exports `MatchingService`, the policy layer for the Redis waiting list. It returns structured results only; it does not emit socket events, create session documents, or write the pair block.
+
+| Method                 | Role                                                                                                                                                  |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `join(clientId)`       | Rejects with `already_in_session` when presence points at an open session; otherwise runs `joinQueue` and returns `queued`, `matched`, or `rejected`. |
+| `leave(clientId)`      | Rejects with `not_in_queue` when in an open session; otherwise `removeFromQueue` and returns `left`. Leave is the waiting-room action only.           |
+| `listWaiting()`        | Current queue order from `listQueue` (head is position 1).                                                                                            |
+| `positionOf(clientId)` | 1-based index in that list, or `null` if absent.                                                                                                      |
+
+Open-session detection loads presence, then `SessionService.findById` when `sessionId` is set. A missing document or an `endedAt` timestamp means the client may join or leave the line even if presence still holds a stale session id. Duplicate joins while already queued are handled inside the match Lua script (same position, no second list entry). Session creation after a match is step 7 (gateway), not this service.
+
 ## Product modules
 
 | Concern                      | In this repo                                                                                   |
@@ -128,5 +141,5 @@ There is no user collection. The browser supplies a random UUID v4; the server c
 | Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache (step 2).                   |
 | Users / profiles             | Not implemented yet.                                                                           |
 | Rooms / meetings             | Not implemented yet.                                                                           |
-| Participants / call sessions | Session records in Mongo; matching and signaling not wired yet.                                |
+| Participants / call sessions | Session records in Mongo; `MatchingService` for queue join/leave; signaling not wired yet.     |
 | Media provider integration   | Not implemented yet.                                                                           |
