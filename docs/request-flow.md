@@ -47,6 +47,21 @@ Success: the controller return value is sent as usual.
 
 Failure: `GlobalExceptionFilter` sends `{ statusCode, message, errors? }` as described in [Features](features.md#errors).
 
+### Reviews
+
+`POST /api/v1/reviews` (see [Reviews](features.md#reviews-mongo)):
+
+```text
+Client
+  → Fastify / global prefix
+  → ZodValidationPipe (rating 1–5, optional comment string)
+  → ReviewsController (review IP rate limit, then ReviewsService.create)
+  → Mongo insert
+  → 201 { id, rating, comment, createdAt }
+```
+
+Invalid rating values and a comment longer than 1000 characters fail in the pipe with `errors`. The service only trims a comment that already passed that check. Rate limit failure is `429` before Mongo.
+
 ## Socket.IO (signaling)
 
 Path is `SOCKET_PATH` (default `/socket.io`) on the same host and port as HTTP. Not prefixed with `api/v1`.
