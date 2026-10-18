@@ -176,12 +176,25 @@ Wire order is always `session.ended` before `queue.waiting` or a new `session.ma
 
 `RtcService.iceServers()` reads `STUN_URLS`, `TURN_URLS`, `TURN_USERNAME`, and `TURN_PASSWORD` from config and returns one STUN entry and one TURN entry (with username and credential). Used on `session.matched` today. The HTTP route `GET /api/v1/rtc/ice-servers` is step 11.
 
+## Reviews (Mongo)
+
+`ReviewsModule` exposes `POST /api/v1/reviews` only. Feedback is about the service, not a session or client id. The rating screen after End is the intended caller; skip sends no request.
+
+| Piece            | Role                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| Body             | `rating` integer 1–5. Optional `comment` string, max `REVIEW_COMMENT_MAX_LENGTH` (1000). Zod rejects both before the handler. |
+| Comment handling | Trimmed in `ReviewsService`. Missing, empty, or whitespace-only → stored as `null`. |
+| Rate limit       | Before insert: `review-ip:{ip}` via `RedisService.rateLimit`, `RATE_LIMITS.reviewsPerIp` (10 per IP per hour). Failure → `429` `Too many requests`. |
+| Response         | `201` with `id` (Mongo `_id` string), `rating`, `comment`, `createdAt`. No Bearer auth. `X-User-Id` is ignored. |
+
+Collection `reviews`: `_id` (ObjectId), `rating`, `comment`, `createdAt` (Mongoose timestamps, no `updatedAt`). Index `{ createdAt: -1 }`. No `sessionId` or `userId`.
+
 ## Product modules
 
 | Concern                      | In this repo                                                                                                            |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                                                                      |
-| Database / ORM               | Mongo connected. `sessions` collection via [Sessions](#sessions-mongo). Reviews not added yet.                          |
+| Database / ORM               | Mongo connected. `sessions` and `reviews` collections via [Sessions](#sessions-mongo) and [Reviews](#reviews-mongo).   |
 | Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache (step 2).                                            |
 | Users / profiles             | Not implemented yet.                                                                                                    |
 | Rooms / meetings             | Not implemented yet.                                                                                                    |
