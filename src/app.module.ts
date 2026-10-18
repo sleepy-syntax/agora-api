@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
 import { MatchingModule } from './matching/matching.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { SignalingModule } from './signaling/signaling.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { SessionsModule } from './sessions/sessions.module';
         RedisModule,
         SessionsModule,
         MatchingModule,
+        SignalingModule,
     ],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
