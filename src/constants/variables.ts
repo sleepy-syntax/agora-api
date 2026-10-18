@@ -22,6 +22,7 @@ export const ENVS = {
     SWAGGER: 'SWAGGER',
     LOG_LEVEL: 'LOG_LEVEL',
     CLIENT_URL: 'CLIENT_URL',
+    SOCKET_PATH: 'SOCKET_PATH',
 
     /* Database */
     MONGODB_URI: 'MONGODB_URI',
