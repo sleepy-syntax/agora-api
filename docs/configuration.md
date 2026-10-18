@@ -43,7 +43,7 @@ Defined in `src/constants/variables.ts`:
 
 | Name                             | Value        | Used for                                     |
 | -------------------------------- | ------------ | -------------------------------------------- |
-| `REVIEW_COMMENT_MAX_LENGTH`      | `1000`       | Max trimmed length on `POST /api/v1/reviews` |
+| `REVIEW_COMMENT_MAX_LENGTH`      | `1000`       | Max comment length on `POST /api/v1/reviews` |
 | `RATE_LIMITS.queueJoinPerClient` | 10 per 60s   | Socket `queue.join` (step 12)                |
 | `RATE_LIMITS.queueJoinPerIp`     | 30 per 60s   | Socket `queue.join` (step 12)                |
 | `RATE_LIMITS.reviewsPerIp`       | 10 per 3600s | `POST /api/v1/reviews` (step 12)             |
