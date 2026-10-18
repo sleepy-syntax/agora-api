@@ -46,3 +46,25 @@ Authorization and cookie headers are not copied into this object. Body/query sec
 Success: the controller return value is sent as usual.
 
 Failure: `GlobalExceptionFilter` sends `{ statusCode, message, errors? }` as described in [Features](features.md#errors).
+
+## Socket.IO (signaling)
+
+Path is `SOCKET_PATH` (default `/socket.io`) on the same host and port as HTTP. Not prefixed with `api/v1`.
+
+```text
+Client (auth.userId on handshake)
+  → Socket.IO middleware (parseUserId)
+  → handleConnection (presence, replace older socket)
+  → SubscribeMessage handlers (readPayload → refreshPresence → service)
+  → server.to(socketId).emit / Redis adapter cross-process
+```
+
+Handshake failure uses connection error `invalid_user_id`. Inbound handler failures emit `error` with `{ code, message }` (for example `invalid_payload`, `rate_limited`, `already_in_session`, `not_a_participant`, `session_ended`). The global Zod pipe does not validate socket message bodies; the gateway uses `readPayload` and refreshes presence on accepted messages.
+
+After `queue.join` returns a partner, `SignalingService.onMatched` creates the session, updates presence, joins Socket.IO rooms, and emits `session.matched`. Signal and media events relay to room `session:{sessionId}` excluding the sender. `media.connected` is the only path that writes the one-hour pair block.
+
+`SessionSweeper` (five-second interval, Redis sweeper lock) prunes stale queue entries and ends sessions that time out or lose participant presence; survivors receive `session.ended` with `next: "waiting"` and are passed back through `MatchingService.join`.
+
+`session.end` and `session.next` run the same finish path: End sends the presser to rating (`next: "rating"`) and requeues the partner; Change partner requeues both.
+
+Disconnect runs `deletePresenceIfSocket` so a replaced tab’s teardown does not clear the new socket’s presence, then `SignalingService.onDisconnect` ends the session for the remaining participant. Application shutdown ends local open sessions the same way.
