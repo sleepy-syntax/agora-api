@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { randomUUID } from 'crypto';
 import { Model } from 'mongoose';
 import { RedisService } from '../redis/redis.service';
+import { SessionHashWriteError } from './session-hash-write.error';
 import { ISession, Session, TEndSession } from './session.schema';
 
 function sortParticipants(a: string, b: string): [string, string] {
@@ -33,18 +34,25 @@ export class SessionService {
             durationMs: null,
         });
 
-        await this.redis.setSessionHash(sessionId, {
-            participantLow: participants[0],
-            participantHigh: participants[1],
-            offererId: participants[0],
-            matchedAt: matchedAt.toISOString(),
-            connectedAt: '',
-            endedAt: '',
-            endReason: '',
-            endedBy: '',
-        });
+        const session = doc.toObject();
 
-        return doc.toObject();
+        try {
+            await this.redis.setSessionHash(sessionId, {
+                participantLow: participants[0],
+                participantHigh: participants[1],
+                offererId: participants[0],
+                matchedAt: matchedAt.toISOString(),
+                connectedAt: '',
+                endedAt: '',
+                endReason: '',
+                endedBy: '',
+            });
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Session hash write failed';
+            throw new SessionHashWriteError(session, message);
+        }
+
+        return session;
     }
 
     async markConnected(sessionId: string, at: Date): Promise<ISession | null> {
