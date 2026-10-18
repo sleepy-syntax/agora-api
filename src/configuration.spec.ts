@@ -22,6 +22,7 @@ type ValidatedConfiguration = {
     [ENVS.PRESENCE_TTL_SECONDS]: number;
     [ENVS.CONNECT_TIMEOUT_SECONDS]: number;
     [ENVS.STATS_CACHE_TTL_SECONDS]: number;
+    [ENVS.SOCKET_PATH]: string;
 };
 
 function expectValid(input: Record<string, unknown>): ValidatedConfiguration {
@@ -60,6 +61,7 @@ describe('ConfigurationSchema', function () {
         expect(value[ENVS.PRESENCE_TTL_SECONDS]).toBe(15);
         expect(value[ENVS.CONNECT_TIMEOUT_SECONDS]).toBe(20);
         expect(value[ENVS.STATS_CACHE_TTL_SECONDS]).toBe(10);
+        expect(value[ENVS.SOCKET_PATH]).toBe('/socket.io');
     });
 
     it.each([ENVS.STUN_URLS, ENVS.TURN_URLS, ENVS.TURN_USERNAME, ENVS.TURN_PASSWORD])('rejects missing %s', function (key) {
