@@ -10,6 +10,8 @@ import { setupSwagger } from './swagger';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import fastifyHelmet from '@fastify/helmet';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { RedisService } from './redis/redis.service';
+import { RedisIoAdapter } from './signaling/redis-io.adapter';
 
 const GLOBAL_PREFIX = process.env[ENVS.GLOBAL_PREFIX] ?? 'api/v1';
 const PORT = process.env[ENVS.PORT] ?? '3000';
@@ -35,6 +37,11 @@ async function bootstrap() {
     app.useGlobalPipes(new ZodValidationPipe());
 
     setupSwagger(app, GLOBAL_PREFIX, PORT);
+
+    const redis = app.get(RedisService);
+    const redisIo = new RedisIoAdapter(app);
+    await redisIo.connect(redis.duplicate(), redis.duplicate());
+    app.useWebSocketAdapter(redisIo);
 
     await app.listen(PORT, '0.0.0.0');
     app.get(Logger).log(`🚀 Server is running on http://localhost:${PORT}/${GLOBAL_PREFIX}`);
