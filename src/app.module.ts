@@ -12,6 +12,7 @@ import { MatchingModule } from './matching/matching.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { SignalingModule } from './signaling/signaling.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { SignalingModule } from './signaling/signaling.module';
         MatchingModule,
         SignalingModule,
         ReviewsModule,
+        StatsModule,
     ],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
