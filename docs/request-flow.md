@@ -62,6 +62,21 @@ Client
 
 Invalid rating values and a comment longer than 1000 characters fail in the pipe with `errors`. The service only trims a comment that already passed that check. Rate limit failure is `429` before Mongo.
 
+### Public stats
+
+`GET /api/v1/stats` (see [Public stats](features.md#public-stats)):
+
+```text
+Client
+  → Fastify / global prefix
+  → StatsController
+  → StatsService.snapshot
+  → Redis cache hit, or queue length plus session and review aggregations, then cache write
+  → 200 { waitingNow, liveSessions, conversationsToday, conversationsAllTime, averageDurationSeconds, averageRating, ratingCount }
+```
+
+No auth header. A cache hit does not query Mongo. Matching and session end do not clear the cache.
+
 ## Socket.IO (signaling)
 
 Path is `SOCKET_PATH` (default `/socket.io`) on the same host and port as HTTP. Not prefixed with `api/v1`.
