@@ -180,23 +180,42 @@ Wire order is always `session.ended` before `queue.waiting` or a new `session.ma
 
 `ReviewsModule` exposes `POST /api/v1/reviews` only. Feedback is about the service, not a session or client id. The rating screen after End is the intended caller; skip sends no request.
 
-| Piece            | Role                                                                                                      |
-| ---------------- | --------------------------------------------------------------------------------------------------------- |
-| Body             | `rating` integer 1–5. Optional `comment` string, max `REVIEW_COMMENT_MAX_LENGTH` (1000). Zod rejects both before the handler. |
-| Comment handling | Trimmed in `ReviewsService`. Missing, empty, or whitespace-only → stored as `null`. |
+| Piece            | Role                                                                                                                                                |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Body             | `rating` integer 1–5. Optional `comment` string, max `REVIEW_COMMENT_MAX_LENGTH` (1000). Zod rejects both before the handler.                       |
+| Comment handling | Trimmed in `ReviewsService`. Missing, empty, or whitespace-only → stored as `null`.                                                                 |
 | Rate limit       | Before insert: `review-ip:{ip}` via `RedisService.rateLimit`, `RATE_LIMITS.reviewsPerIp` (10 per IP per hour). Failure → `429` `Too many requests`. |
-| Response         | `201` with `id` (Mongo `_id` string), `rating`, `comment`, `createdAt`. No Bearer auth. `X-User-Id` is ignored. |
+| Response         | `201` with `id` (Mongo `_id` string), `rating`, `comment`, `createdAt`. No Bearer auth. `X-User-Id` is ignored.                                     |
 
 Collection `reviews`: `_id` (ObjectId), `rating`, `comment`, `createdAt` (Mongoose timestamps, no `updatedAt`). Index `{ createdAt: -1 }`. No `sessionId` or `userId`.
 
+## Public stats
+
+`StatsModule` exposes `GET /api/v1/stats`. The landing page reads it. The route is public: no Bearer auth, and `X-User-Id` is ignored. It does not change the queue, sessions, or the pair block.
+
+`StatsService.snapshot()` returns the JSON at `agora:stats:public` when that value is the seven-field object. A missing key, invalid JSON, or any other shape is recomputed, stored with `STATS_CACHE_TTL_SECONDS`, and returned. Connecting, ending, and queue changes do not delete the key, so a response can be a few seconds behind.
+
+| Field                    | Meaning                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `waitingNow`             | `LLEN` of `agora:queue`                                                                                        |
+| `liveSessions`           | `endedAt` empty and `connectedAt` set                                                                          |
+| `conversationsToday`     | `connectedAt` on the current UTC day, including sessions that are still live                                   |
+| `conversationsAllTime`   | `connectedAt` set. A session that never connected is not counted                                               |
+| `averageDurationSeconds` | Mean `durationMs` of sessions with both `connectedAt` and `endedAt`, in whole seconds. `0` when there are none |
+| `averageRating`          | Mean review rating, two decimal places. `null` when there are no reviews                                       |
+| `ratingCount`            | Number of review documents                                                                                     |
+
+Session counts and the duration mean are one aggregation. The rating mean and count are one aggregation. Review comments are not read. A session that connected yesterday and is still live is in `liveSessions` and `conversationsAllTime`, and not in `conversationsToday`.
+
 ## Product modules
 
-| Concern                      | In this repo                                                                                                            |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                                                                      |
-| Database / ORM               | Mongo connected. `sessions` and `reviews` collections via [Sessions](#sessions-mongo) and [Reviews](#reviews-mongo).   |
-| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache (step 2).                                            |
-| Users / profiles             | Not implemented yet.                                                                                                    |
-| Rooms / meetings             | Not implemented yet.                                                                                                    |
-| Participants / call sessions | Match completion, signaling relay, pair block on connect, session end routing, connect-timeout sweeper, shutdown drain. |
-| Media provider integration   | ICE config via `RtcService`; no Agora SDK or SFU. HTTP ICE refresh is step 11.                                          |
+| Concern                      | In this repo                                                                                                                                  |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                                                                                            |
+| Database / ORM               | Mongo connected. `sessions` and `reviews` collections via [Sessions](#sessions-mongo) and [Reviews](#reviews-mongo). Public stats reads both. |
+| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache. `GET /api/v1/stats` reads the cache and the queue length.                 |
+| Public stats                 | `GET /api/v1/stats`. Cached aggregates only. See [Public stats](#public-stats).                                                               |
+| Users / profiles             | Not implemented yet.                                                                                                                          |
+| Rooms / meetings             | Not implemented yet.                                                                                                                          |
+| Participants / call sessions | Match completion, signaling relay, pair block on connect, session end routing, connect-timeout sweeper, shutdown drain.                       |
+| Media provider integration   | ICE config via `RtcService`; no Agora SDK or SFU. HTTP ICE refresh is step 11.                                                                |
