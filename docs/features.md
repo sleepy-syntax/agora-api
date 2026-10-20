@@ -74,7 +74,7 @@ See [Request flow](request-flow.md) for when logs fire. Summary:
 
 ## Sample API
 
-`AppController` `GET /` → `AppService.getHello()` → `'Hello World!'`. Replace this with a health check or first Agora domain module when the API surface is introduced.
+`AppController` `GET /` → `AppService.getHello()` → `'Hello World!'`. This route stays so the existing e2e test keeps a target. Reachability is `GET /api/v1/health`. See [Health](#health).
 
 ## Redis coordination
 
@@ -82,7 +82,7 @@ See [Request flow](request-flow.md) for when logs fire. Summary:
 
 Key names are built only in `src/redis/keys.ts` (`agora:queue`, `agora:presence:{clientId}`, `agora:pair:{smaller}:{larger}`, `agora:session:{sessionId}`, `agora:stats:public`, `agora:lock:sweeper`, `agora:rate:{scope}:{id}`).
 
-`RedisService` methods used by matching, signaling, stats, and rate limits:
+`RedisService` methods used by matching, signaling, stats, health, and rate limits:
 
 | Area          | Methods                                                                                                                    |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------- |
@@ -92,6 +92,7 @@ Key names are built only in `src/redis/keys.ts` (`agora:queue`, `agora:presence:
 | Session cache | `setSessionHash`, `setSessionHashFields`, `getSessionHash`, `deleteSessionHash`                                            |
 | Rate limit    | `rateLimit` (Lua `INCR` + window `EXPIRE`)                                                                                 |
 | Stats cache   | `cacheStats`, `readStats`                                                                                                  |
+| Health        | `ping` (raw `PING` reply; `PONG` means up)                                                                                 |
 | Sweeper       | `acquireSweeperLock`                                                                                                       |
 | Adapter       | `duplicate()` for Socket.IO pub/sub (`RedisIoAdapter` in bootstrap)                                                        |
 
@@ -174,7 +175,22 @@ Wire order is always `session.ended` before `queue.waiting` or a new `session.ma
 
 ## RTC configuration (`RtcModule`)
 
-`RtcService.iceServers()` reads `STUN_URLS`, `TURN_URLS`, `TURN_USERNAME`, and `TURN_PASSWORD` from config and returns one STUN entry and one TURN entry (with username and credential). Used on `session.matched` today. The HTTP route `GET /api/v1/rtc/ice-servers` is step 11.
+`RtcService.iceServers()` reads `STUN_URLS`, `TURN_URLS`, `TURN_USERNAME`, and `TURN_PASSWORD` from config and returns one STUN entry (urls only) and one TURN entry (`username` and `credential`). `SignalingService` puts that array on `session.matched` for the two participants. There is no HTTP route for it. A public response would hand the TURN credential to anyone who can call the API.
+
+## Health
+
+`HealthModule` exposes `GET /api/v1/health`. Compose and deploy checks use it. It does not touch sessions, the queue, or the pair block. No Bearer auth, and `X-User-Id` is ignored.
+
+`HealthService.check()` reads the Mongoose connection and `RedisService.ping()`:
+
+| Dependency | Up when                                            |
+| ---------- | -------------------------------------------------- |
+| `mongo`    | `readyState` is `ConnectionStates.connected` (`1`) |
+| `redis`    | `PING` returns exactly `PONG`                      |
+
+A throw from `ping` (including a client that is not connected) or any other reply is `redis: "down"`. Any other `readyState` is `mongo: "down"`.
+
+Both up: `200` and `{ "status": "ok", "mongo": "up", "redis": "up" }`. Either down: `503` and `{ "status": "degraded", "mongo": "up" | "down", "redis": "up" | "down" }`. The handler sets `503` on the reply and returns that body. It does not throw, so `GlobalExceptionFilter` does not replace the payload.
 
 ## Reviews (Mongo)
 
@@ -213,9 +229,10 @@ Session counts and the duration mean are one aggregation. The rating mean and co
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | Auth (sessions, JWT, guards) | Not implemented yet. Swagger only declares Bearer.                                                                                            |
 | Database / ORM               | Mongo connected. `sessions` and `reviews` collections via [Sessions](#sessions-mongo) and [Reviews](#reviews-mongo). Public stats reads both. |
-| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache. `GET /api/v1/stats` reads the cache and the queue length.                 |
+| Redis (live coordination)    | Queue, presence, pair block, session hash, rate limit, stats cache, health `PING`. `GET /api/v1/stats` reads the cache and the queue length.  |
 | Public stats                 | `GET /api/v1/stats`. Cached aggregates only. See [Public stats](#public-stats).                                                               |
+| Health                       | `GET /api/v1/health`. Mongo `readyState` and Redis `PING`. See [Health](#health).                                                             |
 | Users / profiles             | Not implemented yet.                                                                                                                          |
 | Rooms / meetings             | Not implemented yet.                                                                                                                          |
 | Participants / call sessions | Match completion, signaling relay, pair block on connect, session end routing, connect-timeout sweeper, shutdown drain.                       |
-| Media provider integration   | ICE config via `RtcService`; no Agora SDK or SFU. HTTP ICE refresh is step 11.                                                                |
+| Media provider integration   | ICE config via `RtcService` on `session.matched` only. No public ICE route. No Agora SDK or SFU.                                              |
