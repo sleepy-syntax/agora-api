@@ -47,6 +47,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         return this.redis;
     }
 
+    ping() {
+        return this.getClient().ping();
+    }
+
     duplicate() {
         return this.getClient().duplicate();
     }
