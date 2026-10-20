@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
 import { MatchingModule } from './matching/matching.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { HealthModule } from './health/health.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { SignalingModule } from './signaling/signaling.module';
 import { StatsModule } from './stats/stats.module';
@@ -25,6 +26,7 @@ import { StatsModule } from './stats/stats.module';
         SignalingModule,
         ReviewsModule,
         StatsModule,
+        HealthModule,
     ],
     controllers: [AppController],
     providers: [AppService, { provide: APP_INTERCEPTOR, useClass: RequestLogInterceptor }],
