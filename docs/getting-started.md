@@ -23,13 +23,12 @@ Default listen URL (from schema defaults):
 
 `http://localhost:3000/api/v1`
 
-The current sample route is `GET /` on the app controller, so with the default prefix that is:
+With the default prefix:
 
-`GET http://localhost:3000/api/v1`
-
-Response body: `Hello World!`
-
-Replace this sample route with health and Agora domain routes as the backend grows.
+| Route                                     | Response                                                               |
+| ----------------------------------------- | ---------------------------------------------------------------------- |
+| `GET http://localhost:3000/api/v1`        | `Hello World!` (sample route; it stays)                                |
+| `GET http://localhost:3000/api/v1/health` | Mongo and Redis reachability (`200` when both are up, `503` otherwise) |
 
 The process binds to `0.0.0.0` so it is reachable from Docker and other hosts, not only localhost.
 
