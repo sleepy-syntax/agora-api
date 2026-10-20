@@ -77,6 +77,21 @@ Client
 
 No auth header. A cache hit does not query Mongo. Matching and session end do not clear the cache.
 
+### Health
+
+`GET /api/v1/health` (see [Health](features.md#health)):
+
+```text
+Client
+  → Fastify / global prefix
+  → HealthController
+  → HealthService.check (mongoose readyState, Redis PING)
+  → 200 { status: "ok", mongo: "up", redis: "up" }
+    or 503 { status: "degraded", mongo, redis }
+```
+
+No auth header. A degraded result sets `503` on the reply and returns the body. It is not an exception, so `GlobalExceptionFilter` does not rewrite it.
+
 ## Socket.IO (signaling)
 
 Path is `SOCKET_PATH` (default `/socket.io`) on the same host and port as HTTP. Not prefixed with `api/v1`.
@@ -91,7 +106,7 @@ Client (auth.userId on handshake)
 
 Handshake failure uses connection error `invalid_user_id`. Inbound handler failures emit `error` with `{ code, message }` (for example `invalid_payload`, `rate_limited`, `already_in_session`, `not_a_participant`, `session_ended`). The global Zod pipe does not validate socket message bodies; the gateway uses `readPayload` and refreshes presence on accepted messages.
 
-After `queue.join` returns a partner, `SignalingService.onMatched` creates the session, updates presence, joins Socket.IO rooms, and emits `session.matched`. Signal and media events relay to room `session:{sessionId}` excluding the sender. `media.connected` is the only path that writes the one-hour pair block.
+After `queue.join` returns a partner, `SignalingService.onMatched` creates the session, updates presence, joins Socket.IO rooms, and emits `session.matched` with `iceServers` for those two clients. That payload is not available over HTTP. Signal and media events relay to room `session:{sessionId}` excluding the sender. `media.connected` is the only path that writes the one-hour pair block.
 
 `SessionSweeper` (five-second interval, Redis sweeper lock) prunes stale queue entries and ends sessions that time out or lose participant presence; survivors receive `session.ended` with `next: "waiting"` and are passed back through `MatchingService.join`.
 
