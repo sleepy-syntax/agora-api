@@ -9,6 +9,8 @@ export const SENSITIVE_LOG_PATHS = [
     'request.body.refreshToken',
     'request.body.secret',
     'request.body.apiKey',
+    'request.body.candidate',
+    'req.body.candidate',
     'request.query.token',
     'request.query.accessToken',
     'request.query.apiKey',
