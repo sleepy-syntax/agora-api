@@ -69,7 +69,7 @@ See [Request flow](request-flow.md) for when logs fire. Summary:
 - `nestjs-pino` / Pino, logger name `nestjs-app`
 - Pretty, colorized, single-line transport when `NODE_ENV` is not `production`; JSON in production
 - `quietReqLogger: true` (no automatic per-request Pino HTTP line; status-based `customLogLevel` still applies to Pino’s HTTP logger)
-- Paths in `SENSITIVE_LOG_PATHS` are redacted as `[REDACTED]`
+- Paths in `SENSITIVE_LOG_PATHS` are redacted as `[REDACTED]`, including `request.body.candidate` and `req.body.candidate`
 - `RequestLogInterceptor` logs method, URL, body, query, params, and a small header subset at **debug** only
 
 ## Sample API
@@ -154,7 +154,7 @@ Event names and error codes live in `src/signaling/events.ts`. `SignalingTranspo
 
 On `matched`, `SessionService.create` runs, both presence hashes get the new `sessionId`, sockets join room `session:{sessionId}`, and each side receives `session.matched` with `sessionId`, `role` (`offerer` for the lexicographically smaller participant id), and `iceServers` from `RtcService`. Queue positions are broadcast. A failed Redis session hash write ends the new session as `connect_failed` and re-enters both ids through `join` when they still have presence.
 
-Relay handlers load the session from Mongo, reject unknown ids, non-participants, and ended sessions, then forward to the session room excluding the sender. SDP and ICE payloads are not logged. `media.connected` sets `connectedAt` once and writes the pair block with `SET NX`; a losing race heals the block when Mongo already shows a connection. `media.failed` while still connecting ends as `connect_failed` and rejoins present participants without writing the pair block.
+Relay handlers load the session from Mongo, reject unknown ids, non-participants, and ended sessions, then forward to the session room excluding the sender. SDP and ICE payloads are not logged. `SENSITIVE_LOG_PATHS` also redacts `request.body.candidate` and `req.body.candidate` so an HTTP body echo cannot print an ICE candidate. `media.connected` sets `connectedAt` once and writes the pair block with `SET NX`; a losing race heals the block when Mongo already shows a connection. `media.failed` while still connecting ends as `connect_failed` and rejoins present participants without writing the pair block.
 
 `SessionSweeper` runs every five seconds: acquire `agora:lock:sweeper`, prune queued ids without presence, end open sessions when a participant’s presence is gone (`disconnect`) or when `CONNECT_TIMEOUT_SECONDS` elapses without `connectedAt` (`connect_failed`), then emit `session.ended` with `next: "waiting"` and rejoin survivors through `MatchingService.join`. Immediate rematch emits `session.matched` instead of `queue.waiting`.
 
