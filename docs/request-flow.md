@@ -39,7 +39,7 @@ Runs only for HTTP and only if the Pino level allows `debug`. It logs:
 - `body`, `query`, `params`
 - headers: `host`, `content-type`, `content-length`, `user-agent`, `referer`, `x-forwarded-for`
 
-Authorization and cookie headers are not copied into this object. Body/query secrets still rely on Pino `redact` paths in `SENSITIVE_LOG_PATHS` (for example `request.body.password`, `request.body.accessToken`). Add paths there when you add new secret fields.
+Authorization and cookie headers are not copied into this object. Body/query secrets still rely on Pino `redact` paths in `SENSITIVE_LOG_PATHS` (for example `request.body.password`, `request.body.accessToken`, and `request.body.candidate`). `req.body.candidate` is redacted the same way for a Pino HTTP `req` echo. Add paths there when you add new secret fields.
 
 ### After the handler
 
